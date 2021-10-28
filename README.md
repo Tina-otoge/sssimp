@@ -6,7 +6,7 @@ Simple Static Site Inductor Made in Python
 Create a folder called `input`, inside create a folder called `content` and an
 empty file called `__init__.py`
 
-Running `python -m sssimp` will generate `output` using it
+Running `python -m sssimp` will generate `output` using the `content` folder
 
 ## Generators
 - HTML files from the content folder will be parsed as Jinja2 templates, they
