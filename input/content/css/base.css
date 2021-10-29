@@ -1,0 +1,10 @@
+img {
+	object-fit: contain;
+	width: 100%;
+}
+
+.codehilite {
+	padding: .1em 1em;
+	background: #333;
+	border-radius: .2em;
+}

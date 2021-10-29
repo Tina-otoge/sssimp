@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<article id="post">
+this is a post
+{{ path }} last modified {{ last_modified }}, created {{ created_at }}
+<main>
+{{ markdown|safe }}
+</main>
+</article>
+
+
+{% endblock %}

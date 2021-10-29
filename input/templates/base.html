@@ -1,0 +1,11 @@
+<!doctype html>
+<html>
+	<head>
+		<link href="{{ "/bundle.css"|a }}?{{ BUNDLE_TIME }}" rel="stylesheet">
+	</head>
+	<body>
+		<h1>Title</h1>
+		<p>Content:</p>
+		{% block content %} {% endblock %}
+	</body>
+</html>
