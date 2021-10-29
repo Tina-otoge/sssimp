@@ -1,20 +1,34 @@
-import logging
-from markdown import markdown
+from markdown import Markdown, Extension
+from markdown.inlinepatterns import SimpleTagInlineProcessor
 
 import sssimp
+from sssimp.generators.html import write_template
 from sssimp import jinja
-from sssimp.utils import mkdir, path_strip
+from sssimp.utils import path_strip
 
 
-def convert(content: str) -> str:
-    return markdown(
-        content,
-        extensions=[
-            # cf https://python-markdown.github.io/extensions/ (in order)
-            'abbr', 'fenced_code', 'footnotes', 'admonition', 'codehilite',
-            'meta', 'smarty', 'toc'
-        ],
-    )
+class StrikeSubExtension(Extension):
+    @staticmethod
+    def _add_pattern(md, char, tag):
+        proc = SimpleTagInlineProcessor(r'(\{0}\{0})(.+?)(\{0}\{0})'.format(char), tag)
+        md.inlinePatterns.register(proc, tag, 200)
+
+    def extendMarkdown(self, md):
+        self._add_pattern(md, '~', 'del')
+        self._add_pattern(md, '_', 'ins')
+
+markdown = Markdown(
+    extensions=[
+        # Builtin extensions
+        # cf https://python-markdown.github.io/extensions/ (in order)
+        'abbr', 'fenced_code', 'footnotes', 'admonition', 'codehilite', 'meta',
+        'smarty', 'toc',
+        # Custom extensions
+        StrikeSubExtension(),
+    ],
+    extension_configs={'smarty': {'smart_angled_quotes': True}},
+)
+
 
 def generate(from_file):
     out_path = (
@@ -24,16 +38,12 @@ def generate(from_file):
             + '.html'
         )
     )
-    relative_output = path_strip(out_path, sssimp.OUTPUT_DIR)
-    relative_input = path_strip(from_file, sssimp.CONTENT_DIR)
-    template_name = f'{from_file.parent.name}.html'
     with open(from_file) as f:
-        html = convert(f.read())
-    template = jinja.get_template(template_name)
-    mkdir(out_path)
-    with open(out_path, 'w') as f:
-        logging.info(f'Generating {relative_output} from {relative_input}')
-        f.write(template.render(markdown=html))
+        html = markdown.convert(f.read())
+    args = {key: value[0] for key, value in markdown.Meta.items()}
+    args.setdefault('template', f'{from_file.parent.name}.html')
+    template = jinja.get_template(args.pop('template'))
+    write_template(out_path, template, src=from_file, markdown=html, **args)
 
 
 def main():

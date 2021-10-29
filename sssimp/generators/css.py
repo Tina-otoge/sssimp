@@ -14,6 +14,7 @@ def main():
         if config.CSS_FILES else
         CSS_DIR.glob('**/*.css')
     )
+    time = 0
     with open(OUT_FILE, 'w') as out:
         for file in files:
             relative_path = path_strip(file, CSS_DIR)
@@ -22,3 +23,5 @@ def main():
             with open(file) as css_file:
                 out.write(css_file.read())
             print(file=out)
+            time = max(time, file.stat().st_mtime)
+    sssimp.jinja.globals['BUNDLE_TIME'] = time

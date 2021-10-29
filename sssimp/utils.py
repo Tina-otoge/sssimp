@@ -13,4 +13,7 @@ def mkdir(path):
 def path_strip(path, parent = APP_DIR):
     """Strips `parent` from `path`"""
     parent = parent or APP_DIR
-    return str(path)[len(str(parent)) + 1:]
+    path = str(path)
+    path = path.removeprefix(str(parent))
+    path = path.removeprefix('/')
+    return path

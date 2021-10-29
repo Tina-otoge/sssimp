@@ -27,7 +27,6 @@ def copy_assets():
         if not file.is_file():
             continue
         relative_path = path_strip(file, sssimp.CONTENT_DIR)
-        print(relative_path)
         if (match := is_ignored(file)):
             logging.info(
                 f'Ignoring asset {relative_path} because it matches'
@@ -35,9 +34,8 @@ def copy_assets():
             )
             continue
         out_file = sssimp.OUTPUT_DIR / relative_path
-        print(out_file)
         mkdir(out_file)
-        logging.info(f'Copying raw asset {path_strip(file)} -> {out_file}')
+        logging.info(f'Copying raw asset {file} -> {out_file}')
         shutil.copyfile(file, out_file)
 
 
