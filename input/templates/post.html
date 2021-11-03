@@ -11,13 +11,18 @@ this is a post
 </p>
 <p>
 {{ meta }}
+<ul>
+	{% for tag in meta.tags_json %}
+	<li>{{ tag }}</li>
+	{% endfor %}
+</ul>
 </p>
 <main>
-{{ markdown|safe }}
+{{ markdown }}
 </main>
 </article>
 <!-- plain text
-{{ plain_text }}
+{{ plain_text|e }}
 -->
 
 
