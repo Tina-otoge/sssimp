@@ -2,9 +2,11 @@ import logging
 import functools
 from pathlib import Path
 import jinja2
-from jinja2 import Environment, PackageLoader
+from jinja2 import Environment, FileSystemLoader
 
 from . import config
+
+__version__ = '0.0.1'
 
 APP_DIR = Path(__file__).parent
 INPUT_DIR = Path(config.INPUT_PATH)
@@ -15,7 +17,7 @@ IGNORE_ASSETS = {'__init__.py', '__pycache__'}
 logging.basicConfig(level=config.LOG_LEVEL, format=config.LOG_FORMAT)
 
 jinja = Environment(
-    loader=PackageLoader('input'),
+    loader=FileSystemLoader('input/templates', followlinks=True),
     autoescape=jinja2.select_autoescape(),
 )
 
