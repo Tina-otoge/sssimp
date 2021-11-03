@@ -7,6 +7,10 @@ import sssimp
 from sssimp import config
 from sssimp.utils import mkdir, path_strip
 
+
+logging.basicConfig(level=config.LOG_LEVEL, format=config.LOG_FORMAT)
+
+
 def run_generators():
     for file in (sssimp.APP_DIR / 'generators').glob('**/*.py'):
         module_str = path_strip(file).replace('/', '.')[:-len('.py')]
@@ -14,12 +18,14 @@ def run_generators():
         logging.info(f'Running {module.__name__}')
         module.main()
 
+
 def is_ignored(path: Path):
     for ignore_path in sssimp.IGNORE_ASSETS:
         if ignore_path == str(path):
             return ignore_path
         if Path(ignore_path).is_dir() and ignore_path in {str(x) for x in path.parents}:
             return ignore_path
+
 
 def copy_assets():
     logging.debug(f'Ignore list: {sssimp.IGNORE_ASSETS}')

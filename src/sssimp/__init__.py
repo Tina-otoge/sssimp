@@ -12,9 +12,7 @@ APP_DIR = Path(__file__).parent
 INPUT_DIR = Path(config.INPUT_PATH)
 CONTENT_DIR = INPUT_DIR / config.CONTENT_DIR_NAME
 OUTPUT_DIR = Path(config.OUTPUT_PATH)
-IGNORE_ASSETS = {'__init__.py', '__pycache__'}
-
-logging.basicConfig(level=config.LOG_LEVEL, format=config.LOG_FORMAT)
+IGNORE_ASSETS = set()
 
 jinja = Environment(
     loader=FileSystemLoader('input/templates', followlinks=True),
