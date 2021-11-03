@@ -1,6 +1,7 @@
 from collections import namedtuple
 import functools
 from io import StringIO
+import json
 from markdown import Markdown, Extension
 from markdown.inlinepatterns import SimpleTagInlineProcessor
 
@@ -20,7 +21,10 @@ class MarkdownPage(Page):
     @functools.cache
     def render(self):
         result = markdown_to_html(self.content)
-        meta = {key: value[0] for key, value in result.meta.items()}
+        meta = {
+            key: json.loads(value[-1]) if key.endswith('_json') else value[-1]
+            for key, value in result.meta.items()
+        }
         meta.setdefault('template', f'{self.src.parent.name}.html')
         template = jinja.get_template(meta['template'])
         return template.render(
