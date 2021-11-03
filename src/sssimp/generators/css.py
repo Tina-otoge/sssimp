@@ -1,7 +1,7 @@
 import logging
 import sssimp
 from sssimp import config
-from sssimp.utils import path_strip
+from sssimp.utils import mkdir, path_strip
 
 
 OUT_FILE = sssimp.OUTPUT_DIR / 'bundle.css'
@@ -15,6 +15,7 @@ def main():
         CSS_DIR.glob('**/*.css')
     )
     time = 0
+    mkdir(OUT_FILE)
     with open(OUT_FILE, 'w') as out:
         for file in files:
             relative_path = path_strip(file, CSS_DIR)
