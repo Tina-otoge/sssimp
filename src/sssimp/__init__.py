@@ -1,4 +1,3 @@
-import logging
 import functools
 from pathlib import Path
 import jinja2
@@ -6,7 +5,7 @@ from jinja2 import Environment, FileSystemLoader
 
 from . import config
 
-__version__ = '0.0.3'
+__version__ = '0.0.4'
 
 APP_DIR = Path(__file__).parent
 INPUT_DIR = Path(config.INPUT_PATH)
