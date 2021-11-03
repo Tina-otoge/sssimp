@@ -22,7 +22,9 @@ class MarkdownPage(Page):
     def render(self):
         result = markdown_to_html(self.content)
         meta = {
-            key: json.loads(value[-1]) if key.endswith('_json') else value[-1]
+            key: json.loads(value[-1][1:])
+            if value[-1].startswith('=')
+            else value[-1]
             for key, value in result.meta.items()
         }
         meta.setdefault('template', f'{self.src.parent.name}.html')
