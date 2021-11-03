@@ -8,7 +8,6 @@ OUT_FILE = sssimp.OUTPUT_DIR / 'bundle.css'
 CSS_DIR = sssimp.INPUT_DIR / 'css'
 
 def main():
-    sssimp.IGNORE_ASSETS.add(str(CSS_DIR))
     files = (
         [CSS_DIR / file for file in config.CSS_FILES]
         if config.CSS_FILES else
