@@ -1,32 +1,62 @@
 import logging
+import functools
 import sssimp
 from sssimp import jinja
 from sssimp.utils import mkdir, path_strip
 
-def write_template(to, template, *args, src=None, **kwargs):
-    kwargs.setdefault('path', to)
-    if src:
-        kwargs.setdefault('src', src)
+
+PAGES = set()
+
+
+class Page:
+    def __init__(self, src, target):
+        self.src = src
+        self.target = target
         stat = src.stat()
-        kwargs.setdefault('last_modified', stat.st_mtime)
-        kwargs.setdefault('created_at', stat.st_ctime)
-    result = template.render(*args, **kwargs)
-    mkdir(to)
-    with open(to, 'w') as f:
-        logging.info(f'Generating {to}')
-        f.write(result)
-    return result
+        self.vars = {
+            'path': target,
+            'last_modified': stat.st_mtime,
+            'created_at': stat.st_ctime,
+        }
+
+    def __str__(self):
+        return str(self.target)
+
+    @property
+    def href(self):
+        return path_strip(self.target, sssimp.OUTPUT_DIR)
+
+    @property
+    def name(self):
+        return self.target.name
+
+    @property
+    def parent(self):
+        return self.target.parent
 
 
-def generate(from_file, to):
-    out_path = sssimp.OUTPUT_DIR / to
-    mkdir(out_path)
-    with open(from_file) as f:
-        template = jinja.from_string(f.read())
-    write_template(out_path, template, src=from_file)
+    @functools.cache
+    def render(self):
+        with open(self.src) as f:
+            content = f.read()
+        template = jinja.from_string(content)
+        return template.render(**self.vars)
+
+    def write(self):
+        mkdir(self.target)
+        with open(self.target, 'w') as f:
+            logging.info(f'Generating {self.target}')
+            f.write(self.render())
+
+
+def prepare():
+    for file in sssimp.CONTENT_DIR.glob('**/*.html'):
+        target = sssimp.OUTPUT_DIR / path_strip(file, sssimp.CONTENT_DIR)
+        PAGES.add(Page(src=file, target=target))
+        sssimp.IGNORE_ASSETS.add(str(file))
 
 
 def main():
-    for file in sssimp.CONTENT_DIR.glob('**/*.html'):
-        generate(file, path_strip(file, sssimp.CONTENT_DIR))
-        sssimp.IGNORE_ASSETS.add(str(file))
+    for page in PAGES:
+        page.vars['pages'] = PAGES
+        page.write()
