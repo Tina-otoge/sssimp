@@ -17,3 +17,6 @@ CLEAN_OUTPUT = True
 import logging
 LOG_FORMAT = '[%(levelname)s] %(message)s'
 LOG_LEVEL = logging.DEBUG
+
+# To enable escaping by default on Jinja2 prints
+AUTOESCAPE=False

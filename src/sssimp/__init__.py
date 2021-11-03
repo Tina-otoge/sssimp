@@ -15,7 +15,7 @@ IGNORE_ASSETS = set()
 
 jinja = Environment(
     loader=FileSystemLoader('input/templates', followlinks=True),
-    autoescape=jinja2.select_autoescape(),
+    autoescape=config.AUTOESCAPE,
 )
 
 def filter(f):
