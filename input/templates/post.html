@@ -3,12 +3,22 @@
 {% block content %}
 
 <article id="post">
+<p>
 this is a post
+</p>
+<p>
 {{ path }} last modified {{ last_modified }}, created {{ created_at }}
+</p>
+<p>
+{{ meta }}
+</p>
 <main>
 {{ markdown|safe }}
 </main>
 </article>
+<!-- plain text
+{{ plain_text }}
+-->
 
 
 {% endblock %}

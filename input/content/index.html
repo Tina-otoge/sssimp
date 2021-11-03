@@ -1,5 +1,12 @@
 {% extends "base.html" %}
 
 {% block content %}
-hewwo
+<p>
+	Files:
+</p>
+<ul>
+	{% for page in pages %}
+	<li><a href="{{ page.href }}">{{ page.name }}</a></li>
+	{% endfor %}
+</ul>
 {% endblock %}
