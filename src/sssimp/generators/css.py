@@ -5,7 +5,7 @@ from sssimp.utils import mkdir, path_strip
 
 
 OUT_FILE = sssimp.OUTPUT_DIR / 'bundle.css'
-CSS_DIR = sssimp.CONTENT_DIR / 'css'
+CSS_DIR = sssimp.INPUT_DIR / 'css'
 
 def main():
     sssimp.IGNORE_ASSETS.add(str(CSS_DIR))
