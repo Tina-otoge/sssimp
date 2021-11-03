@@ -66,3 +66,7 @@ Running `python -m sssimp` will generate content in the `output` folder.
   ...
   ```
   Will use the template `./input/templates/special.html` instead of `post.html`
+  
+  ## Examples
+  
+  See [the `example` branch for an example input folder](https://github.com/Tina-otoge/sssimp/tree/example)
