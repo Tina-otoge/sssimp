@@ -60,3 +60,5 @@ if __name__ == '__main__':
     run_generators()
     logging.info('Copying raw assets')
     copy_assets()
+    print()
+    print(f'Generation finished, open {sssimp.OUTPUT_DIR.resolve().as_uri()} in browser')

@@ -1,5 +1,9 @@
-# sssimp :snake:
-Simple Static Site Inductor Made in Python
+# sssimp 🐍
+Simple Static SIte Maker in Python
+
+A simple tool to generate a static website while being able to use powerful HTML
+templates (Jinja2), Markdown files converted to HTML, and other preprocessors.
+
 
 ## Why?
 
@@ -19,6 +23,22 @@ pip install sssimp
 Create a folder called `input`, it will hold the data to generate the site.
 
 Running `python -m sssimp` will generate content in the `output` folder.
+
+Here is an example script for UNIX that will regenerate the site everytime a
+file changes, useful during development:
+```bash
+trap "echo Exited!; exit 1;" SIGINT SIGTERM
+
+while true; do
+	python -m venv .venv
+	source .venv/bin/activate
+	pip install --upgrade sssimp
+	python -m sssimp
+
+	echo Waiting for change
+	watch -g ls -lR .
+done
+```
 
 ## Generators
 
@@ -70,3 +90,92 @@ Running `python -m sssimp` will generate content in the `output` folder.
   ## Examples
   
   See [the `example` branch for an example input folder](https://github.com/Tina-otoge/sssimp/tree/example)
+
+
+## Additional Jinja2 filters
+
+- `|a` makes any relative path point to the top of the output folder.
+
+  Example:  
+  `input/content/blog/post/tech/2021/11/some-post.html`
+  -> `output/blog/post/tech/2021/11/some-post.html`  
+  With content
+  ```html
+  <link rel="stylesheet" href="{{ "style.css"|a }}">
+  ```
+  Will be rendered as `"../../../../style.css"`
+
+  See also [the `<base>` element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base)
+
+## Additional Jinja2 variables
+
+- `page` is a `sssimp.generators.html.Page`, it contains many information about
+the current document. Markdown files are an instance of
+`sssimp.generators.markdown.MarkdownPage` instead, which inherits from `Page`
+
+  This variable itself contains many useful variables:
+  - `page.last_modified` and `page.created_at` (may be the same on Linux)
+  - `page.href`: The path to the file relative to the output folder
+  - `page.src`: A `pathlib.Path` object of the source file in the input folder
+  - `page.target` A `pathlib.Path` object of the target file in the output
+folder
+  - `page.name`: Shortcut for `page.target.name`, the filename of the outputed
+    file
+  - `page.parent`: Shortcut for `page.target.parent`, the name of the parent
+directory in the output folder
+file
+  - `page.meta`[^md]: The Markdown meta variables, prefixing a var with `=` will
+    interpret it as raw JSON
+    Example
+    ```markdown
+    ---
+    some_var: some value
+    something_else: 42
+    some_tags:= ["tag1", "tag2"]
+    ---
+
+    My cool blog post
+    ...
+    ```
+    The meta variable will always contain a `template` which will resolve to the
+    parent directory name with .html appended if none is set in the meta fields.
+
+    The `page.meta` variable is `None` for raw HTML pages, this avoids KeyErrors
+    when trying to filter pages by a specific meta variable.
+- `plain_text`[^md]: A plain text representation of the Markdown file
+- `markdown`[^md]: The Markdown content converted to HTML
+- `meta`[^md]: A shortcut for `page.meta`
+- `title`[^md]: Returns `page.meta.title` if it exists, else the filename with
+  the characters `-` and `_` replaced by whitespaces, the suffix removed and the
+  first letter capitalized.
+
+  Example:  
+  `input/content/some-cool-page.md`'s title is "Some cool page"
+- `BUNDLE_FILE` always evaluates to `"bundle.css"` for now
+- `BUNDLE_TIME` modification time of the latest updated file in `input/css`,
+  very useful to make the browser refresh the file only if any of the CSS files
+  changed.
+
+  Example:
+  ```html
+  <link rel="stylesheet" href="{{ BUNDLE_FILE}}?{{ BUNDLE_TIME }}">
+  ```
+- `PAGES` a list of `sssimp.generators.html.Page` objects containing every HTML
+  and Markdown files sourced by the site. You can loop over it to generate an
+  index. In conjunction with looking up meta values it can be used to filter by
+  content type.
+
+  Example:
+  ```html+jinja
+  {% for page in PAGES if page.meta.template == 'post.html' %}
+  <a href="{{ page.href }}">{{ page.title }}</a>
+  <div class="tags">
+    {% for tag in page.meta.tags %}
+    <span class="tag">{{ tag }}</span>
+    {% endfor %}
+  </div>
+  Posted on <time>{{ page.created_at }}</time>
+  {% endfor %}
+  ```
+
+[^md]: Markdown only

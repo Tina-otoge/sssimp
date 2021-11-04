@@ -4,7 +4,8 @@ from sssimp import config, jinja
 from sssimp.utils import mkdir, path_strip
 
 
-OUT_FILE = sssimp.OUTPUT_DIR / 'bundle.css'
+BUNDLE_FILE = 'bundle.css'
+OUT_FILE = sssimp.OUTPUT_DIR / BUNDLE_FILE
 CSS_DIR = sssimp.INPUT_DIR / 'css'
 
 def main():
@@ -25,3 +26,4 @@ def main():
             print(file=out)
             time = max(time, file.stat().st_mtime)
     jinja.globals['BUNDLE_TIME'] = time
+    jinja.globals['BUNDLE_FILE'] = BUNDLE_FILE

@@ -4,7 +4,7 @@ from jinja2 import Environment, FileSystemLoader
 
 from . import config
 
-__version__ = '0.0.6'
+__version__ = '0.0.7'
 
 APP_DIR = Path(__file__).parent
 INPUT_DIR = Path(config.INPUT_PATH)
@@ -15,6 +15,9 @@ IGNORE_ASSETS = set()
 jinja = Environment(
     loader=FileSystemLoader('input/templates', followlinks=True),
     autoescape=config.AUTOESCAPE,
+    trim_blocks=True,
+    lstrip_blocks=True,
+    extensions=['jinja2.ext.do'],
 )
 
 def filter(f):

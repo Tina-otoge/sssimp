@@ -16,25 +16,29 @@ class MarkdownPage(Page):
         super().__init__(src, target)
         with open(self.src) as f:
             self.content = f.read()
-        self.plain_text = markdown_to_text(self.content)
-
-    @functools.cache
-    def render(self):
+        self.vars['plain_text'] = markdown_to_text(self.content)
         result = markdown_to_html(self.content)
-        meta = {
+        self.meta = {
             key: json.loads(value[-1][1:])
             if value[-1].startswith('=')
             else value[-1]
             for key, value in result.meta.items()
         }
-        meta.setdefault('template', f'{self.src.parent.name}.html')
-        template = jinja.get_template(meta['template'])
-        return template.render(
-            **self.vars,
-            meta=meta,
-            markdown=result.html,
-            plain_text=self.plain_text,
-        )
+        self.meta.setdefault('template', f'{self.src.parent.name}.html')
+        self.vars['meta'] = self.meta
+        self.vars['markdown'] = result.html
+
+    def get_template(self):
+        return jinja.get_template(self.meta['template'])
+
+    @property
+    def title(self):
+        if 'title' in self.meta:
+            return self.meta['title']
+        result = self.target.stem
+        for char in '-_':
+            result = result.replace(char, ' ')
+        return result.capitalize()
 
 
 class StrikeSubExtension(Extension):
@@ -93,7 +97,7 @@ def markdown_to_text(text):
 
 def prepare():
     for file in sssimp.CONTENT_DIR.glob('**/*.md'):
-        stripped = path_strip(file, sssimp.CONTENT_DIR)
-        target = sssimp.OUTPUT_DIR / (stripped.removesuffix('.md') + '.html')
+        as_html = path_strip(file.with_suffix('.html'), sssimp.CONTENT_DIR)
+        target = sssimp.OUTPUT_DIR / as_html
         PAGES.add(MarkdownPage(src=file, target=target))
         sssimp.IGNORE_ASSETS.add(str(file))

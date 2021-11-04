@@ -12,15 +12,26 @@ class Page:
     def __init__(self, src, target):
         self.src = src
         self.target = target
-        stat = src.stat()
         self.vars = {
-            'path': target,
-            'last_modified': stat.st_mtime,
-            'created_at': stat.st_ctime,
+            'page': self,
         }
+        self.meta = None
 
     def __str__(self):
         return str(self.target)
+
+    @property
+    def created_at(self):
+        return self.stat.st_ctime
+
+    @property
+    def last_modified(self):
+        return self.stat.st_mtime
+
+    @property
+    @functools.cache
+    def stat(self):
+        return self.src.stat()
 
     @property
     def href(self):
@@ -34,15 +45,17 @@ class Page:
     def parent(self):
         return self.target.parent
 
+    def get_template(self):
+        with open(self.src) as f:
+            content = f.read()
+        return jinja.from_string(content)
 
     @functools.cache
     def render(self):
-        with open(self.src) as f:
-            content = f.read()
-        template = jinja.from_string(content)
-        return template.render(**self.vars)
+        return self.get_template().render(**self.vars)
 
-    def write(self):
+    def write(self, target=None):
+        target = target or self.target
         mkdir(self.target)
         with open(self.target, 'w') as f:
             logging.info(f'Generating {self.target}')
