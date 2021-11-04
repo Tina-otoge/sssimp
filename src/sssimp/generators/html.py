@@ -57,6 +57,6 @@ def prepare():
 
 
 def main():
+    jinja.globals['PAGES'] = PAGES
     for page in PAGES:
-        page.vars['pages'] = PAGES
         page.write()

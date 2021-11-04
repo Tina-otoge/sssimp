@@ -1,6 +1,6 @@
 import logging
 import sssimp
-from sssimp import config
+from sssimp import config, jinja
 from sssimp.utils import mkdir, path_strip
 
 
@@ -24,4 +24,4 @@ def main():
                 out.write(css_file.read())
             print(file=out)
             time = max(time, file.stat().st_mtime)
-    sssimp.jinja.globals['BUNDLE_TIME'] = time
+    jinja.globals['BUNDLE_TIME'] = time
