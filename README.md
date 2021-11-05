@@ -124,7 +124,7 @@ folder
   - `page.parent`: Shortcut for `page.target.parent`, the name of the parent
 directory in the output folder
 file
-  - `page.meta`[^md]: The Markdown meta variables, prefixing a var with `=` will
+  - `page.meta`: The Markdown meta variables, prefixing a var with `=` will
     interpret it as raw JSON
     Example
     ```markdown
