@@ -10,6 +10,7 @@ CSS_DIR = sssimp.INPUT_DIR / 'css'
 css_files = None
 
 def prepare():
+    global css_files
     jinja.globals['BUNDLE_FILE'] = BUNDLE_FILE
     css_files = list(
         [CSS_DIR / file for file in config.CSS_FILES]
