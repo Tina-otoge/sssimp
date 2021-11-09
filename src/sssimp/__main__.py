@@ -54,7 +54,11 @@ def copy_assets():
 
 if __name__ == '__main__':
     if config.CLEAN_OUTPUT and sssimp.OUTPUT_DIR.exists():
-        shutil.rmtree(sssimp.OUTPUT_DIR)
+        try:
+            shutil.rmtree(sssimp.OUTPUT_DIR)
+        except Exception:
+            for f in sssimp.OUTPUT_DIR.glob('*'):
+                shutil.rmtree(f)
         logging.info(f'Deleted {sssimp.OUTPUT_DIR}')
     logging.info('Running generators')
     run_generators()
