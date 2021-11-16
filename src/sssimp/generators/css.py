@@ -21,6 +21,9 @@ def prepare():
         jinja.globals['BUNDLE_TIME'] = max(x.stat().st_ctime for x in css_files)
 
 def main():
+    if not css_files:
+        logging.debug('No CSS files found, skipping')
+        return
     mkdir(OUT_FILE)
     with open(OUT_FILE, 'w') as out:
         for file in css_files:
