@@ -1,5 +1,6 @@
 import importlib
 import logging
+import os
 from pathlib import Path
 import shutil
 
@@ -14,7 +15,7 @@ logging.basicConfig(level=config.LOG_LEVEL, format=config.LOG_FORMAT)
 def run_generators():
     modules = set()
     for file in (sssimp.APP_DIR / 'generators').glob('**/*.py'):
-        module_str = path_strip(file).replace('/', '.')[:-len('.py')]
+        module_str = path_strip(file).replace(os.path.sep, '.')[:-len('.py')]
         module = importlib.import_module(f'.{module_str}', package='sssimp')
         if hasattr(module, 'main'):
             modules.add(module)

@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 from sssimp import APP_DIR
@@ -17,5 +18,5 @@ def path_strip(path, parent = APP_DIR):
     """Strips `parent` from `path`"""
     path = str(path)
     path = path.removeprefix(str(parent))
-    path = path.removeprefix('/')
+    path = path.removeprefix(os.path.sep)
     return path

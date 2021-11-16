@@ -17,7 +17,8 @@ def prepare():
         if config.CSS_FILES else
         CSS_DIR.glob('**/*.css')
     )
-    jinja.globals['BUNDLE_TIME'] = max(x.stat().st_ctime for x in css_files)
+    if css_files:
+        jinja.globals['BUNDLE_TIME'] = max(x.stat().st_ctime for x in css_files)
 
 def main():
     mkdir(OUT_FILE)
