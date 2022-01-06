@@ -4,7 +4,7 @@ from jinja2 import Environment, FileSystemLoader
 
 from . import config
 
-__version__ = '0.0.10'
+__version__ = '0.0.11'
 
 APP_DIR = Path(__file__).parent
 INPUT_DIR = Path(config.INPUT_PATH)

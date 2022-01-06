@@ -1,5 +1,7 @@
+from datetime import datetime
 import logging
 import functools
+
 import sssimp
 from sssimp import jinja
 from sssimp.utils import mkdir, path_strip
@@ -22,11 +24,14 @@ class Page:
 
     @property
     def created_at(self):
-        return self.stat.st_ctime
+        return datetime.fromtimestamp(self.stat.st_ctime)
 
     @property
-    def last_modified(self):
-        return self.stat.st_mtime
+    def updated_at(self):
+        time = datetime.fromtimestamp(self.stat.st_mtime)
+        if time == self.created_at:
+            return None
+        return time
 
     @property
     @functools.cache

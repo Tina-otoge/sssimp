@@ -1,5 +1,5 @@
 from collections import namedtuple
-import functools
+from datetime import datetime
 from io import StringIO
 import json
 from markdown import Markdown, Extension
@@ -30,6 +30,12 @@ class MarkdownPage(Page):
 
     def get_template(self):
         return jinja.get_template(self.meta['template'])
+
+    @property
+    def created_at(self):
+        if 'date' in self.meta:
+            return datetime.fromisoformat(self.meta['date'])
+        return super().created_at
 
     @property
     def title(self):
