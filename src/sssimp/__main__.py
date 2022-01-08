@@ -1,3 +1,4 @@
+from argparse import ArgumentParser
 import importlib
 import logging
 import os
@@ -53,7 +54,12 @@ def copy_assets():
         shutil.copyfile(file, out_file)
 
 
+parser = ArgumentParser()
+parser.add_argument('output_dir', nargs='?', default='output', type=Path)
+
 if __name__ == '__main__':
+    args = parser.parse_args()
+    sssimp.OUTPUT_DIR = args.output_dir
     if config.CLEAN_OUTPUT and sssimp.OUTPUT_DIR.exists():
         try:
             shutil.rmtree(sssimp.OUTPUT_DIR)
