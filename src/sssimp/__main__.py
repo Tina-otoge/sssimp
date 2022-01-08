@@ -56,10 +56,13 @@ def copy_assets():
 
 parser = ArgumentParser()
 parser.add_argument('output_dir', nargs='?', default='output', type=Path)
+parser.add_argument('--input', dest='input_dir', default='input', type=Path)
 
 if __name__ == '__main__':
     args = parser.parse_args()
     sssimp.OUTPUT_DIR = args.output_dir
+    sssimp.INPUT_DIR = args.input_dir
+    sssimp.resolve()
     if config.CLEAN_OUTPUT and sssimp.OUTPUT_DIR.exists():
         try:
             shutil.rmtree(sssimp.OUTPUT_DIR)
