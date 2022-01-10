@@ -24,20 +24,9 @@ Create a folder called `input`, it will hold the data to generate the site.
 
 Running `python -m sssimp` will generate content in the `output` folder.
 
-Here is an example script for UNIX that will regenerate the site everytime a
-file changes, useful during development:
+Input and output destination can be changed:
 ```bash
-trap "echo Exited!; exit 1;" SIGINT SIGTERM
-
-while true; do
-	python -m venv .venv
-	source .venv/bin/activate
-	pip install --upgrade sssimp
-	python -m sssimp
-
-	echo Waiting for change
-	watch -g ls -lR .
-done
+python -m sssimp --input ../some-other/input-dir ~/some-other/output-dir
 ```
 
 ## Generators
@@ -114,7 +103,7 @@ the current document. Markdown files are an instance of
 `sssimp.generators.markdown.MarkdownPage` instead, which inherits from `Page`
 
   This variable itself contains many useful variables:
-  - `page.last_modified` and `page.created_at` (may be the same on Linux)
+  - `page.modified_at` and `page.created_at` (`modified_at` forcibly set to `None` if same as `created_at`)
   - `page.href`: The path to the file relative to the output folder
   - `page.src`: A `pathlib.Path` object of the source file in the input folder
   - `page.target` A `pathlib.Path` object of the target file in the output
