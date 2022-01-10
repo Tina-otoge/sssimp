@@ -79,6 +79,7 @@ python -m sssimp --input ../some-other/input-dir ~/some-other/output-dir
   ## Examples
   
   See [the `example` branch for an example input folder](https://github.com/Tina-otoge/sssimp/tree/example)
+  or my personal website https://github.com/Tina-otoge/tina-simp for a real-world example.
 
 
 ## Additional Jinja2 filters
