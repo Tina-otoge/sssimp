@@ -2,8 +2,10 @@ from collections import namedtuple
 from datetime import datetime
 from io import StringIO
 import json
+import logging
 from markdown import Markdown, Extension
 from markdown.inlinepatterns import SimpleTagInlineProcessor
+from jinja2 import TemplateNotFound
 
 import sssimp
 from sssimp.generators.html import Page, PAGES
@@ -105,5 +107,11 @@ def prepare():
     for file in sssimp.CONTENT_DIR.glob('**/*.md'):
         as_html = path_strip(file.with_suffix('.html'), sssimp.CONTENT_DIR)
         target = sssimp.OUTPUT_DIR / as_html
-        PAGES.add(MarkdownPage(src=file, target=target))
+        page = MarkdownPage(src=file, target=target)
         sssimp.IGNORE_ASSETS.add(str(file))
+        try:
+            page.get_template()
+        except TemplateNotFound:
+            logging.info(f'No matching template for {page}, ignoring file')
+            continue
+        PAGES.add(page)
