@@ -1,5 +1,5 @@
 # sssimp 🐍
-Simple Static SIte Maker in Python
+The **S**tatic **S**ite **S**olution **I**n **M**odern **P**ython
 
 A simple tool to generate a static website while being able to use powerful HTML
 templates (Jinja2), Markdown files converted to HTML, and other preprocessors.
