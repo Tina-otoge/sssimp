@@ -1,6 +1,8 @@
 # sssimp 🐍
 The **S**tatic **S**ite **S**olution **I**n **M**odern **P**ython
 
+It's simp with 3 s!
+
 A simple tool to generate a static website while being able to use powerful HTML
 templates (Jinja2), Markdown files converted to HTML, and other preprocessors.
 
@@ -12,10 +14,14 @@ previous experiences working with Jekyll but it seemed like too much work to
 setup everytime and overkill for the job as it supports many features I don't
 necessarily use.
 
+One of the main goals with sssimp is being able to generate a usable website
+without any configuration file or dependency. You only install the sssimp
+package and run it.
+
 ## Installing
 
 ```
-pip install sssimp
+pip install --user sssimp
 ```
 
 ## How to use
@@ -28,6 +34,8 @@ Input and output destination can be changed:
 ```bash
 python -m sssimp --input ../some-other/input-dir ~/some-other/output-dir
 ```
+
+Use `python -m sssimp --help` for more details.
 
 ## Generators
 
