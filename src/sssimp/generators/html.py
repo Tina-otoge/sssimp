@@ -75,6 +75,6 @@ def prepare():
 
 
 def main():
-    jinja.globals['PAGES'] = PAGES
+    jinja.globals['pages'] = PAGES
     for page in PAGES:
         page.write()

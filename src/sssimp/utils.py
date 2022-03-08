@@ -1,5 +1,8 @@
 import os
+import sys
 from pathlib import Path
+import traceback
+from typing import Type
 
 from sssimp import APP_DIR
 
@@ -20,3 +23,10 @@ def path_strip(path, parent = APP_DIR):
     path = path.removeprefix(str(parent))
     path = path.removeprefix(os.path.sep)
     return path
+
+
+def run_safely(f, exception_type: Type[Exception] = Exception, out=sys.stderr):
+    try:
+        f()
+    except exception_type:
+        print(traceback.format_exc(), file=out)

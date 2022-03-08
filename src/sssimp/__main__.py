@@ -4,10 +4,11 @@ import logging
 import os
 from pathlib import Path
 import shutil
+import traceback
 
 import sssimp
 from sssimp import config
-from sssimp.utils import mkdir, path_strip
+from sssimp.utils import mkdir, path_strip, run_safely
 
 
 logging.basicConfig(level=config.LOG_LEVEL, format=config.LOG_FORMAT)
@@ -22,10 +23,10 @@ def run_generators():
             modules.add(module)
         if hasattr(module, 'prepare'):
             logging.info(f'Preparing {module.__name__}')
-            module.prepare()
+            run_safely(module.prepare)
     for module in modules:
         logging.info(f'Running {module.__name__}')
-        module.main()
+        run_safely(module.main)
 
 
 def is_ignored(path: Path):
