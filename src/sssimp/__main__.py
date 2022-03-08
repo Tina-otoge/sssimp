@@ -4,7 +4,7 @@ import logging
 import os
 from pathlib import Path
 import shutil
-import traceback
+import time
 
 import sssimp
 from sssimp import config
@@ -58,12 +58,13 @@ def copy_assets():
 parser = ArgumentParser()
 parser.add_argument('output_dir', nargs='?', default='output', type=Path)
 parser.add_argument('--input', dest='input_dir', default='input', type=Path)
+parser.add_argument(
+    '--watch', action='store_true',
+    help='Wait for changes and rebuild as soon as one occurs'
+)
 
-if __name__ == '__main__':
-    args = parser.parse_args()
-    sssimp.OUTPUT_DIR = args.output_dir
-    sssimp.INPUT_DIR = args.input_dir
-    sssimp.resolve()
+
+def run():
     if config.CLEAN_OUTPUT and sssimp.OUTPUT_DIR.exists():
         try:
             shutil.rmtree(sssimp.OUTPUT_DIR)
@@ -77,3 +78,34 @@ if __name__ == '__main__':
     copy_assets()
     print()
     print(f'Generation finished, open {sssimp.OUTPUT_DIR.resolve().as_uri()} in browser')
+
+
+def get_latest_ctime():
+    return max(
+        file.stat().st_ctime
+        for file in sssimp.INPUT_DIR.rglob('*')
+    )
+
+
+def wait_for_change():
+    print('Waiting for changes...')
+    current = get_latest_ctime()
+    while current == get_latest_ctime():
+        time.sleep(config.WATCH_WAIT_TIME)
+
+
+
+if __name__ == '__main__':
+    args = parser.parse_args()
+    sssimp.OUTPUT_DIR = args.output_dir
+    sssimp.INPUT_DIR = args.input_dir
+    sssimp.resolve()
+    while True:
+        run()
+        if not args.watch:
+            break
+        try:
+            wait_for_change()
+        except KeyboardInterrupt:
+            print('Stopped watcher')
+            break

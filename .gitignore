@@ -1,7 +1,8 @@
 __pycache__/
 /.venv/
 /venv/
-/dist
+/build/
+/dist/
 *.egg-info/
 
 /input/

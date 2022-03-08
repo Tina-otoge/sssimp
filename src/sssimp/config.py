@@ -20,3 +20,6 @@ LOG_LEVEL = logging.DEBUG
 
 # To enable escaping by default on Jinja2 prints
 AUTOESCAPE=False
+
+# Seconds to wait before scanning files for new changes
+WATCH_WAIT_TIME = .5
