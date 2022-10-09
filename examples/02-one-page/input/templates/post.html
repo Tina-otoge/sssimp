@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Markdow</h2>
+<main>
+{{ markdown }}
+</main>
+
+
+<h2>plain text</h2>
+<pre>
+{{ plain_text|e }}
+</pre>
+
+{% endblock %}
