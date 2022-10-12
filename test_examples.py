@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 import sys
 import filecmp
 import difflib
@@ -7,8 +8,8 @@ import shutil
 import pytest
 
 
-root = os.path.dirname(__file__)
-examples = os.listdir(os.path.join(root, 'examples'))
+root = Path(__file__).parent
+examples = list((root / 'examples').iterdir())
 
 def check_diffs(dcmp):
     print(f'check_diffs {dcmp.left} and {dcmp.right}')
@@ -18,9 +19,9 @@ def check_diffs(dcmp):
     for filename in dcmp.diff_files:
         success = False
         print(f"File with difference: {filename}")
-        with open(os.path.join(dcmp.left, filename)) as fh:
+        with (dcmp.left / filename).open() as fh:
             left_content = fh.readlines()
-        with open(os.path.join(dcmp.right, filename)) as fh:
+        with (dcmp.right / filename).open() as fh:
             right_content = fh.readlines()
         for row in difflib.unified_diff(left_content, right_content):
             print(row, end="")
@@ -34,16 +35,16 @@ def check_diffs(dcmp):
 @pytest.mark.parametrize("example", examples)
 def test_examples(example, tmpdir, request):
     print(example)
-    os.environ["PYTHONPATH"] = os.path.join(root, 'src')
-    outdir = os.path.join(tmpdir, 'out')
-    cmd = f"{sys.executable} -m sssimp --input {os.path.join(root, 'examples', example, 'input')} {outdir}"
+    os.environ["PYTHONPATH"] = str(root / 'src')
+    outdir = tmpdir / 'out'
+    cmd = f"{sys.executable} -m sssimp --input {root / 'examples' / example / 'input'} {outdir}"
     print(cmd)
     exit_code = os.system(cmd)
     assert exit_code == 0
-    expected_output = os.path.join(root, 'examples', example, 'output')
+    expected_output = root / 'examples' / example / 'output'
     save = request.config.getoption("--save")
     if save:
-        if os.path.exists(expected_output):
+        if expected_output.exists():
             shutil.rmtree(expected_output)
         shutil.move(outdir, expected_output)
         return
