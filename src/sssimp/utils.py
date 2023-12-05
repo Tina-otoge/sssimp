@@ -1,10 +1,11 @@
 import os
 import sys
-from pathlib import Path
 import traceback
+from pathlib import Path
 from typing import Type
 
 from sssimp import APP_DIR
+
 
 def mkdir(path):
     """
@@ -17,7 +18,7 @@ def mkdir(path):
     path.mkdir(exist_ok=True, parents=True)
 
 
-def path_strip(path, parent = APP_DIR):
+def path_strip(path, parent=APP_DIR):
     """Strips `parent` from `path`"""
     path = str(path)
     path = path.removeprefix(str(parent))

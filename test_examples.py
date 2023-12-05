@@ -1,18 +1,18 @@
-import os
-from pathlib import Path
-import sys
-import filecmp
 import difflib
+import filecmp
+import os
 import shutil
+import sys
+from pathlib import Path
 
 import pytest
 
-
 root = Path(__file__).parent
-examples = list((root / 'examples').iterdir())
+examples = list((root / "examples").iterdir())
+
 
 def check_diffs(dcmp):
-    print(f'check_diffs {dcmp.left} and {dcmp.right}')
+    print(f"check_diffs {dcmp.left} and {dcmp.right}")
     assert dcmp.left_only == []
     assert dcmp.right_only == []
     success = True
@@ -27,21 +27,22 @@ def check_diffs(dcmp):
             print(row, end="")
         print()
 
-    #assert dcmp.diff_files == []
+    # assert dcmp.diff_files == []
     for sub_dcmp in dcmp.subdirs.values():
         success = check_diffs(sub_dcmp) and success
     return success
 
+
 @pytest.mark.parametrize("example", examples)
 def test_examples(example, tmpdir, request):
     print(example)
-    os.environ["PYTHONPATH"] = str(root / 'src')
-    outdir = tmpdir / 'out'
+    os.environ["PYTHONPATH"] = str(root / "src")
+    outdir = tmpdir / "out"
     cmd = f"{sys.executable} -m sssimp --input {root / 'examples' / example / 'input'} {outdir}"
     print(cmd)
     exit_code = os.system(cmd)
     assert exit_code == 0
-    expected_output = root / 'examples' / example / 'output'
+    expected_output = root / "examples" / example / "output"
     save = request.config.getoption("--save")
     if save:
         if expected_output.exists():
@@ -52,4 +53,3 @@ def test_examples(example, tmpdir, request):
     dcmp = filecmp.dircmp(expected_output, outdir)
     print(expected_output, outdir)
     assert check_diffs(dcmp), "Some files differ. See above using the -s flag of pytest"
-

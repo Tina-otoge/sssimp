@@ -1,11 +1,10 @@
-from datetime import datetime
-import logging
 import functools
+import logging
+from datetime import datetime
 
 import sssimp
 from sssimp import jinja
 from sssimp.utils import mkdir, path_strip
-
 
 PAGES = set()
 
@@ -15,7 +14,7 @@ class Page:
         self.src = src
         self.target = target
         self.vars = {
-            'page': self,
+            "page": self,
         }
         self.meta = None
 
@@ -62,19 +61,19 @@ class Page:
     def write(self, target=None):
         target = target or self.target
         mkdir(self.target)
-        with open(self.target, 'w') as f:
-            logging.info(f'Generating {self.target}')
+        with open(self.target, "w") as f:
+            logging.info(f"Generating {self.target}")
             f.write(self.render())
 
 
 def prepare():
-    for file in sssimp.CONTENT_DIR.glob('**/*.html'):
+    for file in sssimp.CONTENT_DIR.glob("**/*.html"):
         target = sssimp.OUTPUT_DIR / path_strip(file, sssimp.CONTENT_DIR)
         PAGES.add(Page(src=file, target=target))
         sssimp.IGNORE_ASSETS.add(str(file))
 
 
 def main():
-    jinja.globals['pages'] = PAGES
+    jinja.globals["pages"] = PAGES
     for page in PAGES:
         page.write()
