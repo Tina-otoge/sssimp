@@ -6,6 +6,8 @@ import logging
 from markdown import Markdown, Extension
 from markdown.inlinepatterns import SimpleTagInlineProcessor
 from jinja2 import TemplateNotFound
+import bleach.linkifier
+from mdx_linkify.mdx_linkify import LinkifyExtension
 
 import sssimp
 from sssimp.generators.html import Page, PAGES
@@ -75,6 +77,7 @@ Markdown.output_formats['plain'] = unmark_element
 
 def markdown_to_html(text):
     HtmlWithMeta = namedtuple('HtmlWithMeta', ('html', 'meta'))
+    mdx_linkify_url_re = bleach.linkifier.build_url_re(tlds=[r"[a-z]+"])
     markdown = Markdown(
         extensions=[
             # Builtin extensions
@@ -83,6 +86,12 @@ def markdown_to_html(text):
             'smarty', 'toc',
             # Custom extensions
             StrikeSubExtension(),
+            # Third-party extensions
+            LinkifyExtension(
+                linker_options={
+                    "url_re": mdx_linkify_url_re,
+                }
+            ),
         ],
         extension_configs={'smarty': {'smart_angled_quotes': True}},
         output_format='html',
