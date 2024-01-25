@@ -1,0 +1,5 @@
+*.egg-info
+/.github
+/.pytest_cache
+/.venv
+/dist
