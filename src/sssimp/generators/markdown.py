@@ -9,6 +9,7 @@ from jinja2 import TemplateNotFound
 from markdown import Extension, Markdown
 from markdown.inlinepatterns import SimpleTagInlineProcessor
 from mdx_linkify.mdx_linkify import LinkifyExtension
+from python_markdown_gh_emoji import GheEmoji
 
 import sssimp
 from sssimp import jinja
@@ -24,7 +25,9 @@ class MarkdownPage(Page):
         self.vars["plain_text"] = markdown_to_text(self.content)
         result = markdown_to_html(self.content)
         self.meta = {
-            key: json.loads(value[-1][1:]) if value[-1].startswith("=") else value[-1]
+            key: json.loads(value[-1][1:])
+            if value[-1].startswith("=")
+            else value[-1]
             for key, value in result.meta.items()
         }
         self.meta.setdefault("template", f"{self.src.parent.name}.html")
@@ -53,7 +56,9 @@ class MarkdownPage(Page):
 class StrikeSubExtension(Extension):
     @staticmethod
     def _add_pattern(md, char, tag):
-        proc = SimpleTagInlineProcessor(r"(\{0}\{0})(.+?)(\{0}\{0})".format(char), tag)
+        proc = SimpleTagInlineProcessor(
+            r"(\{0}\{0})(.+?)(\{0}\{0})".format(char), tag
+        )
         md.inlinePatterns.register(proc, tag, 200)
 
     def extendMarkdown(self, md):
@@ -99,9 +104,11 @@ def markdown_to_html(text):
                     "url_re": mdx_linkify_url_re,
                 }
             ),
+            GheEmoji.load_from_github(),
         ],
         extension_configs={"smarty": {"smart_angled_quotes": True}},
         output_format="html",
+        tab_length=2,
     )
     return HtmlWithMeta(markdown.convert(text), markdown.Meta)
 
