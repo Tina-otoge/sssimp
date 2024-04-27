@@ -1,6 +1,7 @@
 import functools
 import logging
 from datetime import datetime
+from pathlib import Path
 
 import sssimp
 from sssimp import jinja
@@ -41,7 +42,7 @@ class Page:
 
     @property
     def href(self):
-        return path_strip(self.target, sssimp.OUTPUT_DIR)
+        return "/".join(Path(path_strip(self.target, sssimp.OUTPUT_DIR)).parts)
 
     @property
     def name(self):
