@@ -1,2 +1,16 @@
+[project]
+name = "sssimp"
+description = "The Static Site Solution In Modern Python"
+readme = "README.md"
+dynamic = ["version"]
+dependencies = ["jinja2", "markdown", "pymdown-extensions", "pyyaml"]
+scripts = { sssimp = "sssimp.__main__:main" }
+
+[build-system]
+requires = ["setuptools", "setuptools_scm"]
+
+[tool.black]
+line-length = 80
+
 [tool.setuptools_scm]
 local_scheme = "no-local-version"
