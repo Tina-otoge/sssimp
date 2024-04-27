@@ -8,7 +8,6 @@ from . import config
 
 __pkg__ = __name__.split(".")[-1]
 __version__ = importlib.metadata.version(__pkg__)
-print(f"sssimp version {__version__}")
 
 APP_DIR = Path(__file__).parent
 INPUT_DIR = Path(config.INPUT_PATH)
