@@ -4,17 +4,22 @@ from collections import namedtuple
 from datetime import datetime
 from io import StringIO
 
-import bleach.linkifier
+import pymdownx.emoji
 from jinja2 import TemplateNotFound
 from markdown import Extension, Markdown
 from markdown.inlinepatterns import SimpleTagInlineProcessor
-from mdx_linkify.mdx_linkify import LinkifyExtension
-from python_markdown_gh_emoji import GheEmoji
 
 import sssimp
 from sssimp import jinja
 from sssimp.generators.html import PAGES, Page
 from sssimp.utils import path_strip
+
+# Set this if we want to have a fixed version for twemoji
+# I'm considering this to have reproducible tests, but I'm not sure if it's a
+# desirable implementation, since it might cause broken images in the future.
+# pymdownx.emoji.TWEMOJI_PNG_CDN = (
+#     "https://cdn.jsdelivr.net/gh/jdecked/twemoji@latest/assets/72x72/"
+# )
 
 
 class MarkdownPage(Page):
@@ -25,9 +30,11 @@ class MarkdownPage(Page):
         self.vars["plain_text"] = markdown_to_text(self.content)
         result = markdown_to_html(self.content)
         self.meta = {
-            key: json.loads(value[-1][1:])
-            if value[-1].startswith("=")
-            else value[-1]
+            key: (
+                json.loads(value[-1][1:])
+                if value[-1].startswith("=")
+                else value[-1]
+            )
             for key, value in result.meta.items()
         }
         self.meta.setdefault("template", f"{self.src.parent.name}.html")
@@ -54,6 +61,10 @@ class MarkdownPage(Page):
 
 
 class StrikeSubExtension(Extension):
+    """
+    Strike text with `~` and underline text with `_`.
+    """
+
     @staticmethod
     def _add_pattern(md, char, tag):
         proc = SimpleTagInlineProcessor(
@@ -83,7 +94,6 @@ Markdown.output_formats["plain"] = unmark_element
 
 def markdown_to_html(text):
     HtmlWithMeta = namedtuple("HtmlWithMeta", ("html", "meta"))
-    mdx_linkify_url_re = bleach.linkifier.build_url_re(tlds=[r"[a-z]+"])
     markdown = Markdown(
         extensions=[
             # Builtin extensions
@@ -99,14 +109,16 @@ def markdown_to_html(text):
             # Custom extensions
             StrikeSubExtension(),
             # Third-party extensions
-            LinkifyExtension(
-                linker_options={
-                    "url_re": mdx_linkify_url_re,
-                }
-            ),
-            GheEmoji.load_from_github(),
+            "pymdownx.emoji",
+            "pymdownx.magiclink",
         ],
-        extension_configs={"smarty": {"smart_angled_quotes": True}},
+        extension_configs={
+            "smarty": {"smart_angled_quotes": True},
+            "pymdownx.emoji": {
+                "emoji_index": pymdownx.emoji.twemoji,
+                "options": {"classes": "emoji"},
+            },
+        },
         output_format="html",
         tab_length=2,
     )
