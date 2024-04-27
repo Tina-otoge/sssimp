@@ -28,8 +28,6 @@ jobs:
 
       - name: Set up Python
         uses: actions/setup-python@v5
-        with:
-          cache: pip
 
       - name: Build
         env:

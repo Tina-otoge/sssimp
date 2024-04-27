@@ -31,7 +31,9 @@ jobs:
         cache: pip
 
     - name: Install package
-      run: pip install -e .
+      run: |
+        pip install -U pip
+        pip install -e .
 
     - name: Check Python version
       run: python -V
