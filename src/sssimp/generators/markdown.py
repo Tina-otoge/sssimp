@@ -115,6 +115,7 @@ def markdown_to_html(text):
         extension_configs={
             "smarty": {"smart_angled_quotes": True},
             "pymdownx.emoji": {
+                "alt": "html_entity",
                 "emoji_index": pymdownx.emoji.twemoji,
                 "options": {"classes": "emoji"},
             },
