@@ -1,11 +1,14 @@
 import functools
+import importlib.metadata
 from pathlib import Path
 
 from jinja2 import Environment, FileSystemLoader
 
 from . import config
 
-__version__ = "0.0.17"
+__pkg__ = __name__.split(".")[-1]
+__version__ = importlib.metadata.version(__pkg__)
+print(f"sssimp version {__version__}")
 
 APP_DIR = Path(__file__).parent
 INPUT_DIR = Path(config.INPUT_PATH)

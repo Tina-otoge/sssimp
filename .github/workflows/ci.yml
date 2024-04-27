@@ -22,15 +22,15 @@ jobs:
     name: OS ${{matrix.runner}} Python ${{matrix.python-version}}
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
+    - uses: actions/checkout@v4
 
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
+        cache: pip
 
-    - name: Install dependencies
+    - name: Install package
       run: pip install -e .
 
     - name: Check Python version
