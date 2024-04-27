@@ -95,7 +95,7 @@ def wait_for_change():
         time.sleep(config.WATCH_WAIT_TIME)
 
 
-if __name__ == "__main__":
+def main():
     args = parser.parse_args()
     sssimp.OUTPUT_DIR = args.output_dir
     sssimp.INPUT_DIR = args.input_dir
@@ -109,3 +109,7 @@ if __name__ == "__main__":
         except KeyboardInterrupt:
             print("Stopped watcher")
             break
+
+
+if __name__ == "__main__":
+    main()

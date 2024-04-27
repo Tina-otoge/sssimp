@@ -36,7 +36,7 @@ def check_diffs(diff):
 @pytest.mark.parametrize("example", examples)
 def test_examples(example, tmpdir, request):
     outdir = tmpdir / "output"
-    cmd = f"{sys.executable} -m src.sssimp --input {example / 'input'} {outdir}"
+    cmd = f"sssimp --input {example / 'input'} {outdir}"
     print(cmd)
     exit_code = os.system(cmd)
     assert exit_code == 0

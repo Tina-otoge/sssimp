@@ -20,6 +20,8 @@ package and run it.
 
 ## Installing
 
+Requirement: Python 3.8 or later
+
 ```
 pip install --user sssimp
 ```
@@ -28,12 +30,12 @@ pip install --user sssimp
 
 Create a folder called `input`, it will hold the data to generate the site.
 
-Running `python -m sssimp` will generate content in the `output` folder.
+Running `sssimp` will generate content in the `output` folder.
 
 Input and output destination can be changed:
 
 ```bash
-python -m sssimp --input ../some-other/input-dir ~/some-other/output-dir
+sssimp --input ../some-other/input-dir ~/some-other/output-dir
 ```
 
 Use `python -m sssimp --help` for more details.
