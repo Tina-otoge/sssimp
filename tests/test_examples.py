@@ -11,13 +11,13 @@ root = Path(".")
 examples = root.glob("examples/*/")
 
 
-def check_diffs(diff):
+def check_diffs(diff, example):
     assert diff.left_only == []
     assert diff.right_only == []
     success = True
     for filename in diff.diff_files:
         success = False
-        print(f"File with difference: {filename}")
+        print(f"File with difference: {example / filename}")
         left_content = (
             (Path(diff.left) / filename).read_text().splitlines(keepends=True)
         )
@@ -29,7 +29,7 @@ def check_diffs(diff):
         print()
 
     for sub_dcmp in diff.subdirs.values():
-        success = check_diffs(sub_dcmp) and success
+        success = check_diffs(sub_dcmp, example) and success
     return success
 
 
@@ -51,5 +51,6 @@ def test_examples(example, tmpdir, request):
     diff = filecmp.dircmp(expected_output, outdir)
     print(expected_output, outdir)
     assert check_diffs(
-        diff
+        diff,
+        example,
     ), "Some files differ. See above using the -s flag of pytest"
