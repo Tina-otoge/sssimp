@@ -21,8 +21,14 @@ def mkdir(path):
 def path_strip(path, parent=APP_DIR):
     """Strips `parent` from `path`"""
     path = str(path)
-    path = path.removeprefix(str(parent))
-    path = path.removeprefix(os.path.sep)
+    # TODO 3.9+:
+    # path = path.removeprefix(str(parent))
+    # path = path.removeprefix(os.path.sep)
+    # 3.8 compat:
+    if path.startswith(str(parent)):
+        path = path[len(str(parent)) :]
+    if path.startswith(os.path.sep):
+        path = path[1:]
     return path
 
 

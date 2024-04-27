@@ -33,7 +33,9 @@ class Page:
         return time
 
     @property
-    @functools.cache
+    # TODO 3.9+: @functools.cache
+    # 3.8 compat:
+    @functools.lru_cache()
     def stat(self):
         return self.src.stat()
 
@@ -54,7 +56,9 @@ class Page:
             content = f.read()
         return jinja.from_string(content)
 
-    @functools.cache
+    # TODO 3.9+: @functools.cache
+    # 3.8 compat:
+    @functools.lru_cache()
     def render(self):
         return self.get_template().render(**self.vars) + "\n"
 
