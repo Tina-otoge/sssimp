@@ -56,7 +56,7 @@ class Page:
 
     @functools.cache
     def render(self):
-        return self.get_template().render(**self.vars)
+        return self.get_template().render(**self.vars) + "\n"
 
     def write(self, target=None):
         target = target or self.target

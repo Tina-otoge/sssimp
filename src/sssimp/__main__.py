@@ -32,7 +32,9 @@ def is_ignored(path: Path):
     for ignore_path in sssimp.IGNORE_ASSETS:
         if ignore_path == str(path):
             return ignore_path
-        if Path(ignore_path).is_dir() and ignore_path in {str(x) for x in path.parents}:
+        if Path(ignore_path).is_dir() and ignore_path in {
+            str(x) for x in path.parents
+        }:
             return ignore_path
 
 
