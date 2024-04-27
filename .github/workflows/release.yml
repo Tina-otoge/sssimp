@@ -19,6 +19,7 @@ on:
 
 jobs:
   release:
+    name: Release ${{ github.event.release.tag_name || inputs.version_name }}
     permissions:
       id-token: write
     runs-on: ubuntu-latest
