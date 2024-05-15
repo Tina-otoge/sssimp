@@ -1,6 +1,7 @@
 import jinja2
 
 import sssimp
+import sssimp.generators.markdown
 
 
 @sssimp.filter
@@ -15,3 +16,8 @@ def a(context, value: str):
     for _ in diff:
         value = "../" + value
     return value
+
+
+@sssimp.filter
+def markdown(value: str):
+    return sssimp.generators.markdown.markdown_to_html(value).html
