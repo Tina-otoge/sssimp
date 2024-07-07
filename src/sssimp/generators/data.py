@@ -18,12 +18,13 @@ class Data:
 
     def handle_file(self, path: Path):
         parents = [
-            x.split(".")[0] for x in path_strip(path, DATA_DIR).split(os.path.sep)
+            x.split(".")[0]
+            for x in path_strip(path, DATA_DIR).split(os.path.sep)
         ]
         getter = {
-            "yml": yaml.safe_load,
-            "yaml": yaml.safe_load,
             "json": json.load,
+            "yaml": yaml.safe_load,
+            "yml": yaml.safe_load,
         }.get(path.suffix[1:])
         if not getter:
             return
