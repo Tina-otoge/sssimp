@@ -92,8 +92,8 @@ Use `python -m sssimp --help` for more details.
   Will use the template `./input/templates/special.html` instead of `post.html`
 
 - Files placed in `input/data` will exposes their content in templates inside
-  the `data` variable. They can be in either YAML or JSON. The path is part of
-  their position in the data structure tree.
+  the `data` variable. They can be in either YAML, JSON, or Markdown. The path
+  is part of their position in the data structure tree.
 
   Example:
   `./input/data/categories/tech.yml`
@@ -125,8 +125,9 @@ Use `python -m sssimp --help` for more details.
 
 ## Examples
 
-  See [the `example` branch for an example input folder](https://github.com/Tina-otoge/sssimp/tree/example)
-  or my personal website https://github.com/Tina-otoge/tina-simp for a real-world example.
+See [the `examples` directory](./examples) for per-feature examples, or my
+personal website https://github.com/Tina-otoge/tina-simp for a real-world
+example.
 
 ## Additional Jinja2 filters
 
@@ -143,7 +144,13 @@ Use `python -m sssimp --help` for more details.
 
   Will be rendered as `"../../../../style.css"`
 
-  See also [the `<base>` element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base)
+  See also [the `<base>`
+  element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base)
+
+- `|markdown` transforms Markdown content to HTML using the same process that
+  for Markdown files.
+
+- `|json` transforms any object to a formatted JSON.
 
 ## Additional Jinja2 variables
 
