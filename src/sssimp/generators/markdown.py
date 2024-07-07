@@ -41,6 +41,9 @@ class MarkdownPage(Page):
         self.vars["meta"] = self.meta
         self.vars["markdown"] = result.html
 
+    def __repr__(self):
+        return f"{self.__class__.__name__}({self.src})"
+
     def get_template(self):
         return jinja.get_template(self.meta["template"])
 
