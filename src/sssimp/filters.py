@@ -1,3 +1,5 @@
+import json as _json
+
 import jinja2
 
 import sssimp
@@ -21,3 +23,8 @@ def a(context, value: str):
 @sssimp.filter
 def markdown(value: str):
     return sssimp.generators.markdown.markdown_to_html(value).html
+
+
+@sssimp.filter
+def json(value: object):
+    return _json.dumps(value, indent=2, default=str)
