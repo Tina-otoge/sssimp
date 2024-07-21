@@ -55,6 +55,12 @@ def prepare():
     jinja.globals["data"] = data.dict
 
 
+def get():
+    if "data" not in jinja.globals:
+        prepare()
+    return jinja.globals["data"]
+
+
 def read_markdown(path: Path):
     logging.info("read_markdown")
     return MarkdownPage(path, path)
