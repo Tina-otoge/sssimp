@@ -1,33 +1,14 @@
 {
-  "markdown": "examples/04-data/input/data/markdown.md",
-  "yaml": {
-    "type": "YAML",
-    "data": [
-      {
-        "name": "John Doe",
-        "age": 30,
-        "student": false
-      },
-      {
-        "name": "Jane Doe",
-        "age": 25,
-        "date": "2021-12-31",
-        "norway": false
-      }
-    ]
-  },
   "json": {
-    "type": "json",
     "data": {
-      "name": "John",
       "age": 30,
       "city": "New York",
-      "isStudent": false
-    }
+      "isStudent": false,
+      "name": "John"
+    },
+    "type": "json"
   },
-  "yaml-long-extension": {
-    "type": "YAML"
-  },
+  "markdown": "<p>This is <em>markdown</em> <ins>content</ins>.</p>",
   "sub1": {
     "hey": {
       "location": 1
@@ -37,5 +18,24 @@
     "hey": {
       "location": 2
     }
+  },
+  "yaml": {
+    "data": [
+      {
+        "age": 30,
+        "name": "John Doe",
+        "student": false
+      },
+      {
+        "age": 25,
+        "date": "2021-12-31",
+        "name": "Jane Doe",
+        "norway": false
+      }
+    ],
+    "type": "YAML"
+  },
+  "yaml-long-extension": {
+    "type": "YAML"
   }
 }

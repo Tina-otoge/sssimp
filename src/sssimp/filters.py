@@ -27,4 +27,4 @@ def markdown(value: str):
 
 @sssimp.filter
 def json(value: object):
-    return _json.dumps(value, indent=2, default=str)
+    return _json.dumps(value, indent=2, default=str, sort_keys=True)
