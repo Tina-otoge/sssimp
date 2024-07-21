@@ -64,6 +64,9 @@ parser.add_argument(
     action="store_true",
     help="Wait for changes and rebuild as soon as one occurs",
 )
+parser.add_argument(
+    "-V", "--version", action="version", version=sssimp.__version__
+)
 
 
 def run():
