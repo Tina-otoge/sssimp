@@ -58,8 +58,12 @@ def prepare():
 def get(path: str, flat=False):
     path = Path(path)
     data = Data(base_path=path)
+    files = []
     for file in path.rglob("*.*"):
+        files.append(file)
         logging.info(f"Handling data file {file}")
+    files.sort(key=str)
+    for file in files:
         data.handle_file(file)
     if flat:
         return data.flat
