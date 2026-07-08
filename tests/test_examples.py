@@ -8,7 +8,7 @@ from pathlib import Path
 import pytest
 
 root = Path(".")
-examples = root.glob("examples/*/")
+examples = sorted(root.glob("examples/*/"))
 
 
 def check_diffs(diff, example):
@@ -16,14 +16,18 @@ def check_diffs(diff, example):
     assert diff.right_only == []
     success = True
     for filename in diff.diff_files:
-        success = False
         print(f"File with difference: {example / filename}")
-        left_content = (
-            (Path(diff.left) / filename).read_text().splitlines(keepends=True)
-        )
-        right_content = (
-            (Path(diff.right) / filename).read_text().splitlines(keepends=True)
-        )
+        left_path = Path(diff.left) / filename
+        right_path = Path(diff.right) / filename
+        try:
+            left_content = left_path.read_text().splitlines(keepends=True)
+            right_content = right_path.read_text().splitlines(keepends=True)
+        except UnicodeDecodeError:
+            if left_path.read_bytes() != right_path.read_bytes():
+                success = False
+                print("Binary files differ")
+            continue
+        success = False
         for row in difflib.unified_diff(left_content, right_content):
             print(row, end="")
         print()
@@ -33,7 +37,7 @@ def check_diffs(diff, example):
     return success
 
 
-@pytest.mark.parametrize("example", list(examples))
+@pytest.mark.parametrize("example", examples, ids=lambda e: e.name)
 def test_examples(example, tmpdir, request):
     outdir = tmpdir / "output"
     cmd = f"sssimp --input {example / 'input'} {outdir}"
