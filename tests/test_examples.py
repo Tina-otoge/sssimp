@@ -6,9 +6,20 @@ import sys
 from pathlib import Path
 
 import pytest
+from PIL import Image, ImageChops
 
 root = Path(".")
 examples = sorted(root.glob("examples/*/"))
+
+
+def images_equal(left_path, right_path):
+    try:
+        with Image.open(left_path) as left, Image.open(right_path) as right:
+            if left.size != right.size or left.mode != right.mode:
+                return False
+            return ImageChops.difference(left, right).getbbox() is None
+    except OSError:
+        return False
 
 
 def check_diffs(diff, example):
@@ -23,6 +34,8 @@ def check_diffs(diff, example):
             left_content = left_path.read_text().splitlines(keepends=True)
             right_content = right_path.read_text().splitlines(keepends=True)
         except UnicodeDecodeError:
+            if images_equal(left_path, right_path):
+                continue
             if left_path.read_bytes() != right_path.read_bytes():
                 success = False
                 print("Binary files differ")
