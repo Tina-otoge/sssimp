@@ -123,6 +123,34 @@ Use `python -m sssimp --help` for more details.
   }
   ```
 
+- Images placed in `input/images` must have a size specified in their filename
+  using the syntax `name@size.ext`. They will be resized and saved to
+  `output/images/name@size.ext`.
+
+  Size must be in the format `[width]x[height]`. If both `width` and `height`
+  are specified, the converter will ensure both dimensions are under the size,
+  but aspect ratio will be preserved. For example, using size "`200x200`" on an
+  image of resolution `1200x1920` will produce an image of size `125x200`.
+
+  If only one size is specified, the other size will be able to be greater than
+  the specified size. For example, using a size `200x` on an image of
+  resolution `1200x1920` will produce an image of size `200x320`.
+
+  The following shorthands can be used:
+
+  - `thumb`: 128x128
+  - `small`: 256x256
+  - `medium`: 512x512
+  - `large`: 1024x1024
+
+  You can specify multiple sizes, for example, a file named
+  `input/images/name@thumb,large,700x,1200x1200.png` will create the following
+  files in `output/images/`: `name@thumb.png`, `name@large.png`,
+  `name@700x.png`, and `name@1200x1200.png`.
+
+  Full path will be honored, so a file at `input/images/1/2/3/4/name@thumb.png`
+  will be saved to `output/images/1/2/3/4/name@thumb.png`.
+
 ## Examples
 
 See [the `examples` directory](./examples) for per-feature examples, or my
