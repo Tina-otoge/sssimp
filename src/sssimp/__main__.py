@@ -10,7 +10,9 @@ import sssimp
 from sssimp import config
 from sssimp.utils import mkdir, path_strip, run_safely
 
-logging.basicConfig(level=config.LOG_LEVEL, format=config.LOG_FORMAT)
+sssimp.logger.setLevel(config.LOG_LEVEL)
+sssimp.logger.addHandler(logging.StreamHandler())
+sssimp.logger.handlers[0].setFormatter(logging.Formatter(config.LOG_FORMAT))
 
 
 def run_generators():
@@ -21,10 +23,10 @@ def run_generators():
         if hasattr(module, "main"):
             modules.add(module)
         if hasattr(module, "prepare"):
-            logging.info(f"Preparing {module.__name__}")
+            sssimp.logger.info(f"Preparing {module.__name__}")
             run_safely(module.prepare)
     for module in modules:
-        logging.info(f"Running {module.__name__}")
+        sssimp.logger.info(f"Running {module.__name__}")
         run_safely(module.main)
 
 
@@ -39,20 +41,20 @@ def is_ignored(path: Path):
 
 
 def copy_assets():
-    logging.debug(f"Ignore list: {sssimp.IGNORE_ASSETS}")
+    sssimp.logger.debug(f"Ignore list: {sssimp.IGNORE_ASSETS}")
     for file in sssimp.CONTENT_DIR.glob("**/*"):
         if not file.is_file():
             continue
         relative_path = path_strip(file, sssimp.CONTENT_DIR)
         if match := is_ignored(file):
-            logging.info(
+            sssimp.logger.info(
                 f"Ignoring asset {relative_path} because it matches"
                 f' "{match}" from ignore list'
             )
             continue
         out_file = sssimp.OUTPUT_DIR / relative_path
         mkdir(out_file)
-        logging.info(f"Copying raw asset {file} -> {out_file}")
+        sssimp.logger.info(f"Copying raw asset {file} -> {out_file}")
         shutil.copyfile(file, out_file)
 
 
@@ -76,10 +78,10 @@ def run():
         except Exception:
             for f in sssimp.OUTPUT_DIR.glob("*"):
                 shutil.rmtree(f)
-        logging.info(f"Deleted {sssimp.OUTPUT_DIR}")
-    logging.info("Running generators")
+        sssimp.logger.info(f"Deleted {sssimp.OUTPUT_DIR}")
+    sssimp.logger.info("Running generators")
     run_generators()
-    logging.info("Copying raw assets")
+    sssimp.logger.info("Copying raw assets")
     copy_assets()
     print()
     print(

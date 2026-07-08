@@ -33,7 +33,7 @@ def check_diffs(diff, example):
     return success
 
 
-@pytest.mark.parametrize("example", examples)
+@pytest.mark.parametrize("example", list(examples))
 def test_examples(example, tmpdir, request):
     outdir = tmpdir / "output"
     cmd = f"sssimp --input {example / 'input'} {outdir}"

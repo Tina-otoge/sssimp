@@ -1,5 +1,3 @@
-import logging
-
 import sssimp
 from sssimp.utils import path_strip
 
@@ -8,7 +6,7 @@ FILES = set()
 
 def prepare():
     for file in sssimp.CONTENT_DIR.glob("**/*.j2"):
-        logging.info(f"Handling Jinja2 template {file}")
+        sssimp.logger.info(f"Handling Jinja2 template {file}")
         FILES.add(file)
         sssimp.IGNORE_ASSETS.add(str(file))
 

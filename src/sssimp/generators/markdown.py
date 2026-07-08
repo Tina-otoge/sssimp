@@ -1,5 +1,4 @@
 import json
-import logging
 from collections import namedtuple
 from datetime import datetime
 from io import StringIO
@@ -10,7 +9,7 @@ from markdown import Extension, Markdown
 from markdown.inlinepatterns import SimpleTagInlineProcessor
 
 import sssimp
-from sssimp import jinja
+from sssimp import config, jinja
 from sssimp.generators.html import PAGES, Page
 from sssimp.utils import path_strip
 
@@ -20,6 +19,9 @@ from sssimp.utils import path_strip
 # pymdownx.emoji.TWEMOJI_PNG_CDN = (
 #     "https://cdn.jsdelivr.net/gh/jdecked/twemoji@latest/assets/72x72/"
 # )
+
+if config.TWEMOJI_VERSION:
+    pymdownx.emoji.TWEMOJI_PNG_CDN = f"https://cdn.jsdelivr.net/gh/jdecked/twemoji@{config.TWEMOJI_VERSION}/assets/72x72/"
 
 
 class MarkdownPage(Page):
@@ -152,6 +154,8 @@ def prepare():
         try:
             page.get_template()
         except TemplateNotFound:
-            logging.info(f"No matching template for {page}, ignoring file")
+            sssimp.logger.info(
+                f"No matching template for {page}, ignoring file"
+            )
             continue
         PAGES.add(page)

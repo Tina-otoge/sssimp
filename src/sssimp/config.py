@@ -13,6 +13,8 @@ CSS_FILES = None
 # Removes current output folder before generating
 CLEAN_OUTPUT = True
 
+TWEMOJI_VERSION = None
+
 # For log messages
 import logging
 

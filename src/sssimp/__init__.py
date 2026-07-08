@@ -1,5 +1,6 @@
 import functools
 import importlib.metadata
+import logging
 from pathlib import Path
 
 from jinja2 import Environment, FileSystemLoader
@@ -15,6 +16,8 @@ OUTPUT_DIR = Path(config.OUTPUT_PATH)
 IGNORE_ASSETS = set()
 
 CONTENT_DIR = None
+
+logger = logging.getLogger(__name__)
 
 jinja = Environment(
     autoescape=config.AUTOESCAPE,

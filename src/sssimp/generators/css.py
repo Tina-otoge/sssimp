@@ -1,5 +1,3 @@
-import logging
-
 import sssimp
 from sssimp import config, jinja
 from sssimp.utils import mkdir, path_strip
@@ -24,13 +22,13 @@ def prepare():
 
 def main():
     if not css_files:
-        logging.debug("No CSS files found, skipping")
+        sssimp.logger.debug("No CSS files found, skipping")
         return
     mkdir(OUT_FILE)
     with open(OUT_FILE, "w") as out:
         for file in css_files:
             relative_path = path_strip(file, CSS_DIR)
-            logging.info(f"Bundling {relative_path}")
+            sssimp.logger.info(f"Bundling {relative_path}")
             print(f"/** bundle:{relative_path} **/", file=out)
             with open(file) as css_file:
                 out.write(css_file.read())

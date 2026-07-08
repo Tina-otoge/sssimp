@@ -1,5 +1,4 @@
 import functools
-import logging
 from datetime import datetime
 from pathlib import Path
 
@@ -67,7 +66,7 @@ class Page:
         target = target or self.target
         mkdir(self.target)
         with open(self.target, "w") as f:
-            logging.info(f"Generating {self.target}")
+            sssimp.logger.info(f"Generating {self.target}")
             f.write(self.render())
 
 

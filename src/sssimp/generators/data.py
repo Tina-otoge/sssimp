@@ -1,5 +1,4 @@
 import json
-import logging
 import os
 from pathlib import Path
 
@@ -39,10 +38,10 @@ class Data:
             "yml": opener(yaml.safe_load),
         }.get(path.suffix[1:])
         if not getter:
-            logging.warning(f"Unsupported data file {path}")
+            sssimp.logger.warning(f"Unsupported data file {path}")
             return
         data = getter(path)
-        logging.debug(f"Data: {path} -> {data}")
+        sssimp.logger.debug(f"Data: {path} -> {data}")
         target = self.dict
         for parent in parents[:-1]:
             target = target.setdefault(parent, {})
@@ -61,7 +60,7 @@ def get(path: str, flat=False):
     files = []
     for file in path.rglob("*.*"):
         files.append(file)
-        logging.info(f"Handling data file {file}")
+        sssimp.logger.info(f"Handling data file {file}")
     files.sort(key=str)
     for file in files:
         data.handle_file(file)
@@ -71,5 +70,5 @@ def get(path: str, flat=False):
 
 
 def read_markdown(path: Path):
-    logging.info("read_markdown")
+    sssimp.logger.info("read_markdown")
     return MarkdownPage(path, path)
